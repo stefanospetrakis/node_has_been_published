@@ -1,0 +1,8 @@
+{
+  "name": "drupal/node_has_been_published",
+  "description": "Has a node ever been published?",
+  "type": "drupal-module",
+  "license": "GPL-2.0+",
+  "minimum-stability": "dev",
+  "require": {}
+}
