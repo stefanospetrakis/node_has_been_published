@@ -1,0 +1,38 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the node_has_been_published module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function node_has_been_published_install() {
+  $definition = \Drupal::service('entity.last_installed_schema.repository')
+    ->getLastInstalledFieldStorageDefinitions('node')['node_has_been_published'];
+  \Drupal::entityDefinitionUpdateManager()
+    ->installFieldStorageDefinition(
+      'node_has_been_published',
+      'node',
+      'node_has_been_published',
+      $definition);
+
+  $nodes = \Drupal::entityTypeManager()->getStorage('node')->loadMultiple();
+  foreach ($nodes as $node) {
+    if (node_has_been_published_has_published_revision($node->id())) {
+      $node->node_has_been_published = TRUE;
+      $node->save();
+    }
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function _node_has_been_published_uninstall() {
+  $definition = \Drupal::service('entity.last_installed_schema.repository')
+    ->getLastInstalledFieldStorageDefinitions('node')['node_has_been_published'];
+  \Drupal::entityDefinitionUpdateManager()
+    ->uninstallFieldStorageDefinition($definition);
+}

@@ -1,0 +1,6 @@
+name: node_has_been_published
+type: module
+description: Computed field that answers the question whether a node has been published.
+package: Contrib
+core: 8.x
+core_version_requirement: ^8 || ^9

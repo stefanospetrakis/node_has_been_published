@@ -1,0 +1,66 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for node_has_been_published module.
+ *
+ * @DCG
+ * This file is no longer required in Drupal 8.
+ * @see https://www.drupal.org/node/2217931
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\node\Entity\Node;
+
+/**
+ * Implements hook_entity_base_field_info().
+ */
+function node_has_been_published_entity_base_field_info(EntityTypeInterface $entity_type) {
+  $fields = [];
+
+  if ($entity_type->id() === 'node') {
+    $fields['node_has_been_published'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Has been published'))
+      ->setDescription(t('Reports whether the node has ever been published.'))
+      ->setSettings(['on_label' => 'Published (at least once in the past)', 'off_label' => 'Never published'])
+      ->setDisplayOptions('view', [
+        'label' => 'hidden',
+        'region' => 'hidden',
+        'weight' => -5,
+      ])
+      ->setDisplayConfigurable('view', TRUE)
+      ->setTranslatable(TRUE)
+      ->setRevisionable(TRUE)
+      ->setInitialValue(FALSE);
+  }
+
+  return $fields;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave().
+ */
+function node_has_been_published_node_presave(EntityInterface $entity) {
+  if ($entity->node_has_been_published->value > 0) {
+    return;
+  }
+  $entity->node_has_been_published = node_has_been_published_has_published_revision($entity->id());
+}
+
+/**
+ * Checks if a node has at least one published revision.
+ *
+ * TODO: Make a service out of this.
+ */
+function node_has_been_published_has_published_revision(int $nid) {
+  $node = Node::load($nid);
+  $vids = \Drupal::entityTypeManager()->getStorage('node')->revisionIds($node);
+  foreach ($vids as $vid) {
+    if (node_revision_load($vid)->isPublished()) {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
