@@ -19,10 +19,8 @@ function node_has_been_published_install() {
 
   $nodes = \Drupal::entityTypeManager()->getStorage('node')->loadMultiple();
   foreach ($nodes as $node) {
-    if (node_has_been_published_has_published_revision($node->id())) {
-      $node->node_has_been_published = TRUE;
-      $node->save();
-    }
+    $node->node_has_been_published = node_has_been_published_has_published_revision($node->id());
+    $node->save();
   }
 }
 
