@@ -4,3 +4,5 @@ description: Computed field that answers the question whether a node has been pu
 package: Contrib
 core: 8.x
 core_version_requirement: ^8 || ^9
+dependencies:
+  - drupal:node
