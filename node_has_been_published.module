@@ -31,7 +31,7 @@ function node_has_been_published_entity_base_field_info(EntityTypeInterface $ent
  * Implements hook_ENTITY_TYPE_presave().
  */
 function node_has_been_published_node_presave(EntityInterface $entity) {
-  if ($entity->node_has_been_published->value > 0) {
+  if ($entity->node_has_been_published->value > 0 || !$entity->id()) {
     return;
   }
   $entity->node_has_been_published = node_has_been_published_has_published_revision($entity->id());
