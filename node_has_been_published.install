@@ -9,8 +9,7 @@
  * Implements hook_install().
  */
 function node_has_been_published_install() {
-  $definition = \Drupal::service('entity.last_installed_schema.repository')
-    ->getLastInstalledFieldStorageDefinitions('node')['node_has_been_published'];
+  $definition = _node_has_been_published_field_storage_definition();
   \Drupal::entityDefinitionUpdateManager()
     ->installFieldStorageDefinition(
       'node_has_been_published',

@@ -21,19 +21,7 @@ function node_has_been_published_entity_base_field_info(EntityTypeInterface $ent
   $fields = [];
 
   if ($entity_type->id() === 'node') {
-    $fields['node_has_been_published'] = BaseFieldDefinition::create('boolean')
-      ->setLabel(t('Has been published'))
-      ->setDescription(t('Reports whether the node has ever been published.'))
-      ->setSettings(['on_label' => 'Published (at least once in the past)', 'off_label' => 'Never published'])
-      ->setDisplayOptions('view', [
-        'label' => 'hidden',
-        'region' => 'hidden',
-        'weight' => -5,
-      ])
-      ->setDisplayConfigurable('view', TRUE)
-      ->setTranslatable(TRUE)
-      ->setRevisionable(TRUE)
-      ->setInitialValue(FALSE);
+    $fields['node_has_been_published'] = _node_has_been_published_field_storage_definition();
   }
 
   return $fields;
@@ -63,4 +51,23 @@ function node_has_been_published_has_published_revision(int $nid) {
     }
   }
   return FALSE;
+}
+
+/**
+ * Returns the field storage definition for our field.
+ */
+function _node_has_been_published_field_storage_definition() {
+  return BaseFieldDefinition::create('boolean')
+    ->setLabel(t('Has been published'))
+    ->setDescription(t('Reports whether the node has ever been published.'))
+    ->setSettings(['on_label' => 'Published (at least once in the past)', 'off_label' => 'Never published'])
+    ->setDisplayOptions('view', [
+      'label' => 'hidden',
+      'region' => 'hidden',
+      'weight' => -5,
+    ])
+    ->setDisplayConfigurable('view', TRUE)
+    ->setTranslatable(TRUE)
+    ->setRevisionable(TRUE)
+    ->setInitialValue(FALSE);
 }
